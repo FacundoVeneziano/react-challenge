@@ -1,21 +1,46 @@
-import {
-  TextField,
-  Button
-} from '@mui/material'
+import { TextField, Button } from "@mui/material";
+import { createUser } from "../services/api";
 
-import useFormStyles from '../styles/useFormFields'
+import useFormStyles from "../styles/useFormFields";
 
-const Form2 = ({ setStep = () => {} }) => {
-  const classes = useFormStyles()
+const Form2 = ({ setStep = () => {}, setForm = () => {}, form }) => {
+  const classes = useFormStyles();
+
+  const cleanForm = () => {
+    setForm(
+      {
+        name: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        cc: "",
+      },
+      setStep(0)
+    );
+  };
 
   const onSubmit = (event) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+
+    const data = {
+      name: form.name,
+      lastName: form.lastName,
+      email: form.email,
+      phoneNumber: form.phoneNumber,
+      cc: form.cc,
+    };
+    createUser(data).then(() => cleanForm());
+  };
+
+  const onChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
-    <form
-      onSubmit={onSubmit}
-    >
+    <form onSubmit={onSubmit}>
       <TextField
         className={classes.formField}
         fullWidth
@@ -23,7 +48,9 @@ const Form2 = ({ setStep = () => {} }) => {
         type="email"
         id="email"
         label="E-mail"
-        defaultValue={''}
+        value={form.email}
+        name="email"
+        onChange={onChange}
       />
       <TextField
         className={classes.formField}
@@ -31,7 +58,9 @@ const Form2 = ({ setStep = () => {} }) => {
         required
         id="phoneNumber"
         label="Teléfono"
-        defaultValue={''}
+        value={form.phoneNumber}
+        name="phoneNumber"
+        onChange={onChange}
       />
       <TextField
         className={classes.formField}
@@ -40,7 +69,9 @@ const Form2 = ({ setStep = () => {} }) => {
         type="number"
         id="cc"
         label="Documento de identidad"
-        defaultValue={''}
+        value={form.cc}
+        name="cc"
+        onChange={onChange}
       />
       <Button
         className={classes.formButtons}
@@ -49,14 +80,11 @@ const Form2 = ({ setStep = () => {} }) => {
       >
         Anterior
       </Button>
-      <Button
-        variant="contained"
-        type="submit"
-      >
+      <Button variant="contained" type="submit" onSubmit={onSubmit}>
         Enviar
       </Button>
     </form>
-  )
-}
+  );
+};
 
-export default Form2
+export default Form2;

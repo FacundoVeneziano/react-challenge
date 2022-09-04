@@ -19,7 +19,13 @@ const steps = [
 
 const App = () => {
   const [step, setStep] = useState(0);
-
+  const [form, setForm] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    cc: "",
+  });
 
   return (
     <Container
@@ -42,7 +48,7 @@ const App = () => {
               marginTop: "4em",
             }}
           >
-            {cloneElement(steps[step].componente, { setStep })}
+            {cloneElement(steps[step].componente, { setStep, form, setForm })}
           </Box>
         </Grid>
         <Grid item md={8} sm={12} xs={12}>
