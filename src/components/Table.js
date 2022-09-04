@@ -5,18 +5,31 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
-} from '@mui/material'
+  Paper,
+  Button,
+} from "@mui/material";
+import { deleteUser } from "../services/api";
 
-import useUsers from '../hooks/useUsers'
+const TableData = ({ users, getUsers }) => {
 
-const TableData = () => {
-  const { users } = useUsers()
- 
+
+  const deleteUsers = (id) => {
+    const proceed = window.confirm(
+      "Estas seguro que deseas eliminar este usuario?"
+    );
+    if (proceed) {
+      deleteUser(id)
+        .then(() => {
+          getUsers();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   return (
-    <TableContainer
-      component={Paper}
-    >
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -35,34 +48,29 @@ const TableData = () => {
             <TableCell>
               <strong>C.C.</strong>
             </TableCell>
+            <TableCell>
+              <strong>Acciones</strong>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user, key) => (
-            <TableRow
-              key={key}
-            >
+          {users.map((users) => (
+            <TableRow key={users._id}>
+              <TableCell>{users.name}</TableCell>
+              <TableCell>{users.lastName}</TableCell>
+              <TableCell>{users.email}</TableCell>
+              <TableCell>{users.phoneNumber}</TableCell>
+              <TableCell>{users.cc}</TableCell>
               <TableCell>
-                {user.name}
-              </TableCell>
-              <TableCell>
-                {user.lastName}
-              </TableCell>
-              <TableCell>
-                {user.email}
-              </TableCell>
-              <TableCell>
-                {user.phoneNumber}
-              </TableCell>
-              <TableCell>
-                {user.cc}
+                <Button>Edit</Button>
+                <Button onClick={() => deleteUsers(users._id)}>Delete</Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  )
-}
+  );
+};
 
-export default TableData
+export default TableData;

@@ -40,7 +40,7 @@ const Form1 = ({ setStep = () => {}, setForm = () => {}, form }) => {
         name="lastName"
         onChange={onChange}
       />
-      <Button variant="contained" type="submit" onSubmit={onSubmit}>
+      <Button variant="contained" type="submit">
         Siguiente
       </Button>
     </form>

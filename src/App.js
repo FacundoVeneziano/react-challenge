@@ -5,6 +5,7 @@ import { Container, Step, Stepper, StepLabel, Box, Grid } from "@mui/material";
 import Form1 from "./components/Form1";
 import Form2 from "./components/Form2";
 import TableData from "./components/Table";
+import useUsers from "./hooks/useUsers";
 
 const steps = [
   {
@@ -26,6 +27,7 @@ const App = () => {
     phoneNumber: "",
     cc: "",
   });
+  const { users, getUsers } = useUsers();
 
   return (
     <Container
@@ -48,11 +50,11 @@ const App = () => {
               marginTop: "4em",
             }}
           >
-            {cloneElement(steps[step].componente, { setStep, form, setForm })}
+            {cloneElement(steps[step].componente, { setStep, form, setForm, getUsers })}
           </Box>
         </Grid>
         <Grid item md={8} sm={12} xs={12}>
-          <TableData />
+          <TableData users={users} getUsers={getUsers} />
         </Grid>
       </Grid>
     </Container>

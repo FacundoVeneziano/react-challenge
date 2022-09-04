@@ -3,7 +3,7 @@ import { createUser } from "../services/api";
 
 import useFormStyles from "../styles/useFormFields";
 
-const Form2 = ({ setStep = () => {}, setForm = () => {}, form }) => {
+const Form2 = ({ setStep = () => {}, setForm = () => {}, form, getUsers }) => {
   const classes = useFormStyles();
 
   const cleanForm = () => {
@@ -29,7 +29,9 @@ const Form2 = ({ setStep = () => {}, setForm = () => {}, form }) => {
       phoneNumber: form.phoneNumber,
       cc: form.cc,
     };
-    createUser(data).then(() => cleanForm());
+    createUser(data)
+      .then(() => getUsers())
+      .then(() => cleanForm());
   };
 
   const onChange = (e) => {

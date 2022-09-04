@@ -1,31 +1,32 @@
-import {
-  useState,
-  useEffect
-} from 'react'
+import { useState, useEffect } from "react";
 
-import axios from 'axios'
+import axios from "axios";
 
 const useUsers = () => {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState([]);
 
   /** GET USERS */
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const { data } = await axios.get(process.env.REACT_APP_USERS_URL)
+    getUsers();
+  }, []);
 
-        setUsers(data)
-      } catch (err) {
-        console.log('KO::USERS', err)
-      }
+  const getUsers = async () => {
+    try {
+      const { data } = await axios.get(process.env.REACT_APP_USERS_URL);
+
+      setUsers(data);
+    } catch (err) {
+      setError(err);
+    } finally {
     }
-
-    getUsers()
-  }, [])
+  };
 
   return {
-    users
-  }
-}
+    users,
+    error,
+    getUsers,
+  };
+};
 
-export default useUsers
+export default useUsers;
