@@ -5,15 +5,15 @@ import { createUser, editUser } from "../services/api";
 import useFormStyles from "../styles/useFormFields";
 import { useLoading } from "../context/LoadingProvider";
 
-
 const Form2 = ({
   setStep = () => {},
-  setForm = () => {},
+  onChangeForm = () => {},
   form,
   getUsers,
   isEditing,
   onResetForm,
   onShowMessage,
+  errors,
 }) => {
   const classes = useFormStyles();
   const { showLoading, hideLoading } = useLoading();
@@ -26,7 +26,9 @@ const Form2 = ({
     handleOnSubmit(form)
       .then(() => {
         onShowMessage({
-          message: isEditing ? "Usuario editado correctamente" : "Usuario creado",
+          message: isEditing
+            ? "Usuario editado correctamente"
+            : "Usuario creado",
           type: "success",
         });
         getUsers();
@@ -41,13 +43,6 @@ const Form2 = ({
       .finally(hideLoading);
   };
 
-  const onChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
     <form onSubmit={onSubmit}>
       <TextField
@@ -59,7 +54,7 @@ const Form2 = ({
         label="E-mail"
         value={form.email}
         name="email"
-        onChange={onChange}
+        onChange={onChangeForm}
       />
       <TextField
         className={classes.formField}
@@ -69,7 +64,7 @@ const Form2 = ({
         label="Teléfono"
         value={form.phoneNumber}
         name="phoneNumber"
-        onChange={onChange}
+        onChange={onChangeForm}
       />
       <TextField
         className={classes.formField}
@@ -80,7 +75,7 @@ const Form2 = ({
         label="Documento de identidad"
         value={form.cc}
         name="cc"
-        onChange={onChange}
+        onChange={onChangeForm}
       />
       <Button
         className={classes.formButtons}
@@ -89,7 +84,12 @@ const Form2 = ({
       >
         Anterior
       </Button>
-      <Button variant="contained" type="submit" onSubmit={onSubmit}>
+      <Button
+        variant="contained"
+        type="submit"
+        onSubmit={onSubmit}
+        disabled={Object.values(errors).length > 0}
+      >
         Enviar
       </Button>
     </form>

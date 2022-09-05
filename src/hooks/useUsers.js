@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 import { useLoading } from "../context/LoadingProvider";
+import { formatError } from "../helpers/errors";
 
-const useUsers = () => {
+const useUsers = (setAlertMessage) => {
   const [users, setUsers] = useState([]);
-  const [error, setError] = useState([]);
   const { showLoading, hideLoading } = useLoading();
 
   /** GET USERS */
@@ -19,8 +19,12 @@ const useUsers = () => {
       const { data } = await axios.get(process.env.REACT_APP_USERS_URL);
 
       setUsers(data);
-    } catch (err) {
-      setError(err);
+    } catch (error) {
+      setAlertMessage({
+        isOpen: true,
+        message: formatError(error),
+        type: "error",
+      });
     } finally {
       hideLoading();
     }
@@ -28,7 +32,6 @@ const useUsers = () => {
 
   return {
     users,
-    error,
     getUsers,
   };
 };

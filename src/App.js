@@ -1,12 +1,22 @@
 import { useState, cloneElement } from "react";
 
-import { Container, Step, Stepper, StepLabel, Box, Grid } from "@mui/material";
+import {
+  Container,
+  Step,
+  Stepper,
+  StepLabel,
+  Box,
+  Grid,
+  Stack,
+  Alert,
+} from "@mui/material";
 
 import Form1 from "./components/Form1";
 import Form2 from "./components/Form2";
 import TableData from "./components/Table";
 import useUsers from "./hooks/useUsers";
 import SimpleSnackbar from "./components/SimpleSnackbar";
+import { useFormFields } from "./hooks/useFormFields";
 
 const steps = [
   {
@@ -27,6 +37,21 @@ export const initialForm = {
   cc: "",
 };
 
+const validations = {
+  name: {
+    regex: RegExp(/^[a-zA-Z ]*$/),
+    error: "Nombre solo puede tener letras y espacios",
+  },
+  lastName: {
+    regex: RegExp(/^[a-zA-Z ]*$/),
+    error: "Apellido solo puede tener letras y espacios",
+  },
+  phoneNumber: {
+    regex: RegExp(/^\+{0,1}\d*$/),
+    error: "Formato no válido, ej: +123456",
+  },
+};
+
 const initialAlertMessage = {
   isOpen: false,
   type: "",
@@ -36,9 +61,12 @@ const initialAlertMessage = {
 const App = () => {
   const [step, setStep] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm] = useState(initialForm);
-  const { users, getUsers } = useUsers();
+  const [form, handleChangeForm, resetForm, fillForm, errors] = useFormFields(
+    initialForm,
+    validations
+  );
   const [alertMessage, setAlertMessage] = useState(initialAlertMessage);
+  const { users, getUsers } = useUsers(setAlertMessage);
 
   const handleClose = () => {
     setAlertMessage(initialAlertMessage);
@@ -54,15 +82,27 @@ const App = () => {
 
   const handleEdit = (user) => {
     setIsEditing(true);
-    setForm({
+    fillForm({
       ...user,
     });
   };
 
   const handleResetForm = () => {
     setIsEditing(false);
-    setForm(initialForm);
+    resetForm();
     setStep(0);
+  };
+
+  const showErrors = () => {
+    return (
+      <Stack sx={{ width: "100%" }} spacing={2}>
+        {Object.values(errors).map((item) => (
+          <Alert key={item} severity="error">
+            {item}
+          </Alert>
+        ))}
+      </Stack>
+    );
   };
 
   return (
@@ -89,13 +129,15 @@ const App = () => {
             {cloneElement(steps[step].componente, {
               setStep,
               form,
-              setForm,
+              onChangeForm: handleChangeForm,
               getUsers,
               isEditing,
               onResetForm: handleResetForm,
               onShowMessage: handleMessage,
+              errors,
             })}
           </Box>
+          {showErrors()}
         </Grid>
         <Grid item md={8} sm={12} xs={12}>
           <TableData

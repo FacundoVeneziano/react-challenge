@@ -1,13 +1,14 @@
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Stack, Alert } from "@mui/material";
 
 import useFormStyles from "../styles/useFormFields";
 
 const Form1 = ({
   setStep = () => {},
-  setForm = () => {},
+  onChangeForm = () => {},
   form,
   isEditing,
   onResetForm,
+  errors,
 }) => {
   const classes = useFormStyles();
 
@@ -15,13 +16,6 @@ const Form1 = ({
     event.preventDefault();
 
     setStep(1);
-  };
-
-  const onChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
@@ -34,7 +28,7 @@ const Form1 = ({
         label="Nombre"
         value={form.name}
         name="name"
-        onChange={onChange}
+        onChange={onChangeForm}
       />
       <TextField
         className={classes.formField}
@@ -44,7 +38,7 @@ const Form1 = ({
         label="Apellido"
         value={form.lastName}
         name="lastName"
-        onChange={onChange}
+        onChange={onChangeForm}
       />
       {isEditing && (
         <Button
@@ -55,7 +49,11 @@ const Form1 = ({
           Cancelar Edicion
         </Button>
       )}
-      <Button variant="contained" type="submit">
+      <Button
+        variant="contained"
+        type="submit"
+        disabled={Object.values(errors).length > 0}
+      >
         Siguiente
       </Button>
     </form>
