@@ -1,37 +1,26 @@
 import { TextField, Button } from "@mui/material";
-import { createUser } from "../services/api";
+import { createUser, editUser } from "../services/api";
 
 import useFormStyles from "../styles/useFormFields";
 
-const Form2 = ({ setStep = () => {}, setForm = () => {}, form, getUsers }) => {
+const Form2 = ({
+  setStep = () => {},
+  setForm = () => {},
+  form,
+  getUsers,
+  isEditing,
+  onResetForm,
+}) => {
   const classes = useFormStyles();
 
-  const cleanForm = () => {
-    setForm(
-      {
-        name: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        cc: "",
-      },
-      setStep(0)
-    );
-  };
+  const handleOnSubmit = isEditing ? editUser : createUser;
 
   const onSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      name: form.name,
-      lastName: form.lastName,
-      email: form.email,
-      phoneNumber: form.phoneNumber,
-      cc: form.cc,
-    };
-    createUser(data)
+    handleOnSubmit(form)
       .then(() => getUsers())
-      .then(() => cleanForm());
+      .then(() => onResetForm());
   };
 
   const onChange = (e) => {

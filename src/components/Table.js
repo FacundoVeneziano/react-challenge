@@ -16,7 +16,7 @@ import { deleteUser } from "../services/api";
 import CustomPagination from "./Pagination";
 import AlertDialog from "./AlertDialog";
 
-const TableData = ({ users, getUsers }) => {
+const TableData = ({ users, getUsers, onPressEdit }) => {
   const deleteUsers = (id) => {
     deleteUser(id)
       .then((res) => {
@@ -53,18 +53,18 @@ const TableData = ({ users, getUsers }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((users) => (
-            <TableRow key={users._id}>
-              <TableCell>{users.name}</TableCell>
-              <TableCell>{users.lastName}</TableCell>
-              <TableCell>{users.email}</TableCell>
-              <TableCell>{users.phoneNumber}</TableCell>
-              <TableCell>{users.cc}</TableCell>
+          {users.map((user) => (
+            <TableRow key={user._id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.lastName}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.phoneNumber}</TableCell>
+              <TableCell>{user.cc}</TableCell>
               <TableCell>
-                <Button variant="outlined">
-                  <EditIcon>Edit</EditIcon>
+                <Button variant="outlined" onClick={() => onPressEdit(user)}>
+                  <EditIcon />
                 </Button>
-                <AlertDialog onConfirm={() => deleteUsers(users._id)}>
+                <AlertDialog onConfirm={() => deleteUsers(user._id)}>
                   <DeleteIcon />
                 </AlertDialog>
               </TableCell>

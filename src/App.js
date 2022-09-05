@@ -18,16 +18,32 @@ const steps = [
   },
 ];
 
+export const initialForm = {
+  name: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  cc: "",
+};
+
 const App = () => {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    name: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    cc: "",
-  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [form, setForm] = useState(initialForm);
   const { users, getUsers } = useUsers();
+
+  const handleEdit = (user) => {
+    setIsEditing(true);
+    setForm({
+      ...user,
+    });
+  };
+
+  const handleResetForm = () => {
+    setIsEditing(false);
+    setForm(initialForm);
+    setStep(0);
+  };
 
   return (
     <Container
@@ -50,11 +66,22 @@ const App = () => {
               marginTop: "4em",
             }}
           >
-            {cloneElement(steps[step].componente, { setStep, form, setForm, getUsers })}
+            {cloneElement(steps[step].componente, {
+              setStep,
+              form,
+              setForm,
+              getUsers,
+              isEditing,
+              onResetForm: handleResetForm,
+            })}
           </Box>
         </Grid>
         <Grid item md={8} sm={12} xs={12}>
-          <TableData users={users} getUsers={getUsers} />
+          <TableData
+            users={users}
+            getUsers={getUsers}
+            onPressEdit={handleEdit}
+          />
         </Grid>
       </Grid>
     </Container>

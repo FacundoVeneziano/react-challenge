@@ -2,7 +2,13 @@ import { TextField, Button } from "@mui/material";
 
 import useFormStyles from "../styles/useFormFields";
 
-const Form1 = ({ setStep = () => {}, setForm = () => {}, form }) => {
+const Form1 = ({
+  setStep = () => {},
+  setForm = () => {},
+  form,
+  isEditing,
+  onResetForm,
+}) => {
   const classes = useFormStyles();
 
   const onSubmit = (event) => {
@@ -40,6 +46,15 @@ const Form1 = ({ setStep = () => {}, setForm = () => {}, form }) => {
         name="lastName"
         onChange={onChange}
       />
+      {isEditing && (
+        <Button
+          className={classes.formButtons}
+          variant="outlined"
+          onClick={onResetForm}
+        >
+          Cancelar Edicion
+        </Button>
+      )}
       <Button variant="contained" type="submit">
         Siguiente
       </Button>
