@@ -6,26 +6,25 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Grid,
   Button,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+
 import { deleteUser } from "../services/api";
+import CustomPagination from "./Pagination";
+import AlertDialog from "./AlertDialog";
 
 const TableData = ({ users, getUsers }) => {
-
-
   const deleteUsers = (id) => {
-    const proceed = window.confirm(
-      "Estas seguro que deseas eliminar este usuario?"
-    );
-    if (proceed) {
-      deleteUser(id)
-        .then(() => {
-          getUsers();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
+    deleteUser(id)
+      .then((res) => {
+        getUsers();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -62,13 +61,20 @@ const TableData = ({ users, getUsers }) => {
               <TableCell>{users.phoneNumber}</TableCell>
               <TableCell>{users.cc}</TableCell>
               <TableCell>
-                <Button>Edit</Button>
-                <Button onClick={() => deleteUsers(users._id)}>Delete</Button>
+                <Button variant="outlined">
+                  <EditIcon>Edit</EditIcon>
+                </Button>
+                <AlertDialog onConfirm={() => deleteUsers(users._id)}>
+                  <DeleteIcon />
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Grid>
+        <CustomPagination users={users} />
+      </Grid>
     </TableContainer>
   );
 };
