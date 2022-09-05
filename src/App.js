@@ -39,11 +39,11 @@ export const initialForm = {
 
 const validations = {
   name: {
-    regex: RegExp(/^[a-zA-Z ]*$/),
+    regex: RegExp(/^[a-zA-ZÀ-ú ]*$/),
     error: "Nombre solo puede tener letras y espacios",
   },
   lastName: {
-    regex: RegExp(/^[a-zA-Z ]*$/),
+    regex: RegExp(/^[a-zA-ZÀ-ú ]*$/),
     error: "Apellido solo puede tener letras y espacios",
   },
   phoneNumber: {
