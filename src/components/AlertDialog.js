@@ -27,7 +27,7 @@ export default function AlertDialog({ onConfirm, children }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          ¿Estás seguro que deseas eliminar este usuario?
+          ¿Seguro que deseas eliminar este usuario?
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>

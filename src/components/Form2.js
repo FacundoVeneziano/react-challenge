@@ -3,6 +3,8 @@ import { formatError } from "../helpers/errors";
 import { createUser, editUser } from "../services/api";
 
 import useFormStyles from "../styles/useFormFields";
+import { useLoading } from "../context/LoadingProvider";
+
 
 const Form2 = ({
   setStep = () => {},
@@ -14,16 +16,17 @@ const Form2 = ({
   onShowMessage,
 }) => {
   const classes = useFormStyles();
+  const { showLoading, hideLoading } = useLoading();
 
   const handleOnSubmit = isEditing ? editUser : createUser;
 
   const onSubmit = (event) => {
     event.preventDefault();
-
+    showLoading();
     handleOnSubmit(form)
       .then(() => {
         onShowMessage({
-          message: isEditing ? 'Editado correctamente' : "Creado",
+          message: isEditing ? "Usuario editado correctamente" : "Usuario creado",
           type: "success",
         });
         getUsers();
@@ -34,7 +37,8 @@ const Form2 = ({
           message: formatError(error),
           type: "error",
         })
-      );
+      )
+      .finally(hideLoading);
   };
 
   const onChange = (e) => {
