@@ -6,6 +6,7 @@ import Form1 from "./components/Form1";
 import Form2 from "./components/Form2";
 import TableData from "./components/Table";
 import useUsers from "./hooks/useUsers";
+import SimpleSnackbar from "./components/SimpleSnackbar";
 
 const steps = [
   {
@@ -26,11 +27,30 @@ export const initialForm = {
   cc: "",
 };
 
+const initialAlertMessage = {
+  isOpen: false,
+  type: "",
+  message: "",
+};
+
 const App = () => {
   const [step, setStep] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState(initialForm);
   const { users, getUsers } = useUsers();
+  const [alertMessage, setAlertMessage] = useState(initialAlertMessage);
+
+  const handleClose = () => {
+    setAlertMessage(initialAlertMessage);
+  };
+
+  const handleMessage = ({ message, type }) => {
+    setAlertMessage({
+      isOpen: true,
+      message,
+      type,
+    });
+  };
 
   const handleEdit = (user) => {
     setIsEditing(true);
@@ -73,6 +93,7 @@ const App = () => {
               getUsers,
               isEditing,
               onResetForm: handleResetForm,
+              onShowMessage: handleMessage,
             })}
           </Box>
         </Grid>
@@ -81,6 +102,13 @@ const App = () => {
             users={users}
             getUsers={getUsers}
             onPressEdit={handleEdit}
+            onShowMessage={handleMessage}
+          />
+          <SimpleSnackbar
+            open={alertMessage.isOpen}
+            handleClose={handleClose}
+            message={alertMessage.message}
+            type={alertMessage.type}
           />
         </Grid>
       </Grid>

@@ -1,4 +1,5 @@
 import { TextField, Button } from "@mui/material";
+import { formatError } from "../helpers/errors";
 import { createUser, editUser } from "../services/api";
 
 import useFormStyles from "../styles/useFormFields";
@@ -10,6 +11,7 @@ const Form2 = ({
   getUsers,
   isEditing,
   onResetForm,
+  onShowMessage,
 }) => {
   const classes = useFormStyles();
 
@@ -19,8 +21,20 @@ const Form2 = ({
     event.preventDefault();
 
     handleOnSubmit(form)
-      .then(() => getUsers())
-      .then(() => onResetForm());
+      .then(() => {
+        onShowMessage({
+          message: isEditing ? 'Editado correctamente' : "Creado",
+          type: "success",
+        });
+        getUsers();
+      })
+      .then(() => onResetForm())
+      .catch((error) =>
+        onShowMessage({
+          message: formatError(error),
+          type: "error",
+        })
+      );
   };
 
   const onChange = (e) => {
